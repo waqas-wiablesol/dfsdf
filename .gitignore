@@ -13,21 +13,45 @@ wilcom_pipeline/local_secrets.py
 __pycache__/
 *.py[cod]
 *.egg-info/
+
+# Every virtualenv name in common use. `.venv/` alone is not enough: a checkout
+# that was set up with `python -m venv env` or a tool-created `.env` directory
+# would otherwise commit 500 MB of interpreter. `pip install -r
+# wilcom_pipeline/requirements.txt` is the source of truth -- never the tree.
 .venv/
 venv/
+env/
+ENV/
+.env/
+
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
 
 # --- node --------------------------------------------------------------------
+# `node_modules/` matches at any depth, so the list below is redundant but kept
+# as documentation of where the trees actually live. `frontend/package.json` and
+# `frontend/package-lock.json` are the source of truth: run `npm install`.
 node_modules/
-frontend/node_modules/
+**/node_modules/
 frontend/.vite/
 
 # --- pipeline output ---------------------------------------------------------
 # Generated, large, and fully regenerable from the URLs in `wilcom_work/screening`.
 # Each work tree holds clips, frames and cached model replies, which are tens of
 # megabytes of things that can be rebuilt.
+#
+# `wilcom_medium/` and `wilcom_medium_src/` are the same kind of tree as
+# `wilcom_work/`: local scratch output from one tutorial (a ~28 MB source video,
+# its clips, cached model replies and the extracted trajectory), left over from
+# trying a second quality preset. Nothing here is an input to the code, and the
+# video is re-downloadable, so it does not belong in the repository.
 wilcom_work/
 wilcom_work_*/
+wilcom_medium/
+wilcom_medium_src/
 
 # --- editor ------------------------------------------------------------------
 .vscode/
