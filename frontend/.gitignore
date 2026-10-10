@@ -1,0 +1,7 @@
+# Build output is committed into the Python package so the server can serve the app
+# with no extra step, so only local tooling is ignored here.
+node_modules/
+.vite/
+
+# The build directory itself is committed on purpose: `python -m wilcom_pipeline.api`
+# serves it directly, and requiring Node to run the UI would be a worse trade.

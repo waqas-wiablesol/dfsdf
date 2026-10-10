@@ -14,10 +14,11 @@ Video2GUI: Synthesizing Large-Scale Interaction Trajectories<br>for Generalized 
 <p align="center">
   <a href="https://arxiv.org/abs/2605.14747"><b>[📜 arXiv]</b></a> •
   <a href="https://huggingface.co/datasets/xwm/WildGUI"><b>[🤗 WildGUI Dataset]</b></a> •
-  <a href="https://github.com/WeiminXiong/Video2GUI"><b>[🐱 GitHub]</b></a>
+  <a href="https://github.com/WeiminXiong/Video2GUI"><b>[🐱 GitHub]</b></a> •
+  <a href="INSTRUCTIONS.md"><b>[🛠️ Setup & Running Guide]</b></a>
 </p>
 
-This repository contains the code and data for the paper **"Video2GUI: Synthesizing Large-Scale Interaction Trajectories for Generalized GUI Agent Pretraining"**, accepted at **ICML 2026**.
+This repository contains the code and data for the paper **"Video2GUI: Synthesizing Large-Scale Interaction Trajectories for Generalized GUI Agent Pretraining"**, accepted at **ICML 2026**. For step-by-step instructions on setting up and running the interactive pipeline and web studio, see [INSTRUCTIONS.md](INSTRUCTIONS.md).
 
 <p align="center">
 <img src="static/images/teaser_figure.png" width="780"/>

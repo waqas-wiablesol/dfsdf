@@ -1,0 +1,35 @@
+# Ignore rules for this repository.
+#
+# The first entry is the important one: `local_secrets.py` holds a real API key so
+# it does not have to be exported before every run, and a key in a tracked file is a
+# key burned the first time this repository is pushed anywhere.
+
+# --- credentials -------------------------------------------------------------
+wilcom_pipeline/local_secrets.py
+*.env
+.env
+
+# --- python ------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# --- node --------------------------------------------------------------------
+node_modules/
+frontend/node_modules/
+frontend/.vite/
+
+# --- pipeline output ---------------------------------------------------------
+# Generated, large, and fully regenerable from the URLs in `wilcom_work/screening`.
+# Each work tree holds clips, frames and cached model replies, which are tens of
+# megabytes of things that can be rebuilt.
+wilcom_work/
+wilcom_work_*/
+
+# --- editor ------------------------------------------------------------------
+.vscode/
+.idea/
+.DS_Store

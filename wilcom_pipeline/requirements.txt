@@ -1,0 +1,51 @@
+# WILCOM Video2GUI pipeline -- runtime dependencies.
+#
+# Grouped by what actually needs them, because the groups are separable:
+# `wilcom-pipeline check`, `plan`, and the offline half of stage 3 run with almost
+# none of this installed.
+#
+# Python 3.10 or newer: the type hints use the `X | Y` form.
+
+# --- API access: screening, stages 1 and 2 -----------------------------------
+# The official Gemini SDK. Verified against 2.25.0.
+google-genai>=2.0.0
+
+# --- video handling ---------------------------------------------------------
+# Ships a static ffmpeg binary, so no system-wide install is needed. `video.py`
+# prefers whatever is on PATH first, then falls back to this.
+imageio-ffmpeg>=0.4.9
+
+# Frame dimensions. Also used by the test suite to build sample images.
+Pillow>=10.0.0
+
+# --- candidate screening (the paper's Prompts 1 and 2) ----------------------
+# Supplies the metadata those prompts read: title, description, tags, channel,
+# category and captions. Needs no API key, so `screen` costs nothing until the two
+# text prompts are called.
+yt-dlp>=2024.1.0
+
+# --- dataset export: stage 3 -------------------------------------------------
+# Imported only inside `hf_export.py`, so assembling and verifying rows works
+# without it. Note: the row schema must use Python LISTS for nested fields, not
+# `datasets.Sequence` -- see the comment in `hf_export.features`.
+datasets>=2.18.0
+
+# --- web API + UI ------------------------------------------------------------
+# `python -m wilcom_pipeline.api` serves the JSON API and the built React app.
+# FastAPI and uvicorn only; the front end is static files it serves directly, so no
+# Node runtime is needed to RUN the UI -- only to rebuild it.
+fastapi>=0.115.0
+uvicorn>=0.30.0
+
+# Gradio is no longer used by the API. It is kept listed because `ui.py` still
+# works and nothing has been deleted; the React app replaced it after the browser
+# aborted Gradio's SSE stream on every reconnect, which made the interface look
+# dead after a click. Delete this line and `ui.py` together if the old view is no
+# longer wanted.
+gradio>=6.0.0
+
+# --- not needed at all for the above -----------------------------------------
+# `timecode`, `hashing`, `records`, `errors`, `replies`, `ledger`, `log`, `cost`,
+# `report` and the shared half of `stage_dataset` use nothing beyond the standard
+# library. That split is why the pure-Python half of stage 3 is testable with no
+# dependencies and no network.
