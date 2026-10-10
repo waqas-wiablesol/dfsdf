@@ -48,7 +48,85 @@ Video2GUI is a fully automated, three-stage pipeline that turns unlabeled Intern
 - **(B) Trajectory Extraction.** Each video is split into ≤4-minute segments and processed by Gemini-3-Pro under a sliding-window strategy with historical context, producing instruction–trajectory pairs with task instructions, action timestamps, action details, and visually grounded low-level instructions.
 - **(C) Action Spatial Grounding.** For each interaction at timestamp *t*, we feed Gemini-3-Pro a triplet of high-resolution screenshots {*o*<sub>t−0.5s</sub>, *o*<sub>t</sub>, *o*<sub>t+0.5s</sub>} with the low-level instruction and predict the grounding target *b*<sub>t</sub> = (*x*₁, *y*₁, *x*₂, *y*₂). Manual verification on 200 sampled actions shows **>95%** are correctly parameterized.
 
-## 📦 WildGUI Dataset
+## �️ Setup, Configuration & Running
+
+The full walkthrough — every studio tab, every CLI subcommand, the output layout — is in [INSTRUCTIONS.md](INSTRUCTIONS.md). This is the short version.
+
+### 1. Requirements
+
+| | Version | Needed for |
+|---|---|---|
+| Python | **3.10+** | the pipeline and the API server |
+| Node.js | **18+** | rebuilding the web UI only — *not* to run it |
+
+The built React bundle is committed under `wilcom_pipeline/webui/`, so a plain install needs no Node at all.
+
+### 2. Install
+
+Dependencies are pinned in exactly two places, and both are the source of truth. Installed trees are gitignored: recreate them, never commit them.
+
+```powershell
+# Backend -- wilcom_pipeline/requirements.txt
+python -m venv .venv
+.venv\Scripts\Activate.ps1                 # Windows;  source .venv/bin/activate elsewhere
+pip install -r wilcom_pipeline/requirements.txt
+
+# Frontend -- frontend/package.json (only if you are changing the UI)
+cd frontend; npm install; npm run build; cd ..
+```
+
+`npm run build` writes the bundle straight into `wilcom_pipeline/webui/`, which is what the API server serves.
+
+### 3. Configure the API key
+
+Get a key from [Google AI Studio](https://aistudio.google.com/apikey). It is resolved at startup in this order (see [`config.py`](wilcom_pipeline/config.py)):
+
+1. `GEMINI_API_KEY`, then `GOOGLE_API_KEY`, in the environment
+2. a `.env` file in the project root
+3. `wilcom_pipeline/local_secrets.py` — gitignored
+
+The `.env` route is the least fiddly:
+
+```powershell
+copy .env.example .env      # then set GEMINI_API_KEY=... inside it
+```
+
+No key is ever read from a tracked file, so a fork cannot leak one by accident.
+
+Model choice is separate from the key. `WILCOM_MODEL_TIER=economy` swaps the paper-faithful Gemini-3-Pro annotator for a cheaper set (the `grounding` role alone is ~8× cheaper per call). It is opt-in because it changes the data — see [`config.py`](wilcom_pipeline/config.py).
+
+### 4. Run
+
+```powershell
+# Web studio: JSON API + the built UI on one port
+.venv\Scripts\python.exe -m wilcom_pipeline.api --host 127.0.0.1 --port 8000
+#   -> http://127.0.0.1:8000
+
+# UI development, with hot reload and /api proxied to port 8000
+cd frontend; npm run dev            #   -> http://127.0.0.1:5173
+```
+
+### 5. Command line
+
+The pipeline also runs without the web UI:
+
+```powershell
+.venv\Scripts\python.exe -m wilcom_pipeline.cli check --source path\to\video.mp4   # probe only, no API calls
+.venv\Scripts\python.exe -m wilcom_pipeline.cli plan  --source path\to\video.mp4   # cost estimate, no API calls
+.venv\Scripts\python.exe -m wilcom_pipeline.cli run   --source path\to\video.mp4   # all three stages
+```
+
+`--source` takes a file **or a folder**. `--stages grounding,dataset` reuses a cached stage 1 instead of paying for it again, and `--work DIR` (default `wilcom_work`) is where every artifact lands — gitignored, and regenerable.
+
+### 6. Tests
+
+Offline: no API key and no network needed.
+
+```powershell
+.venv\Scripts\python.exe -m unittest discover wilcom_pipeline/tests/
+```
+
+## �📦 WildGUI Dataset
 
 WildGUI is the largest open-source GUI pre-training dataset to date, with comprehensive coverage across **web, mobile, and desktop** platforms. It is released across two HuggingFace repositories:
 

@@ -172,16 +172,20 @@ The web application provides tabs for every stage of dataset curation:
 The pipeline can also be run entirely from the command line without the web UI:
 
 ```powershell
-# Check configuration and API key status:
-.venv\Scripts\python.exe -m wilcom_pipeline.cli check
+# Check the environment (no API calls):
+.venv\Scripts\python.exe -m wilcom_pipeline.cli check --source path\to\video.mp4
 
-# Run end-to-end pipeline on a video:
-.venv\Scripts\python.exe -m wilcom_pipeline.cli run \
-    --url "https://youtube.com/watch?v=VIDEO_ID" \
-    --work wilcom_work \
-    --model-traj gemini-3.1-pro-preview \
-    --model-ground gemini-3.1-pro-preview
+# Estimate cost without spending anything:
+.venv\Scripts\python.exe -m wilcom_pipeline.cli plan --source path\to\video.mp4
+
+# Run all three stages on a video file or a folder of videos:
+.venv\Scripts\python.exe -m wilcom_pipeline.cli run --source path\to\video.mp4 --work wilcom_work
+
+# Reuse a cached stage 1 and only re-run grounding + dataset assembly:
+.venv\Scripts\python.exe -m wilcom_pipeline.cli run --source path\to\video.mp4 --stages grounding,dataset
 ```
+
+Useful flags on `run` / `trajectory` / `grounding`: `--traj-model`, `--ground-model`, `--limit-videos`, `--limit-actions`, `--max-clips`, `--thinking`, `--clip-seconds`, `--no-cache`. Run any subcommand with `-h` for the current list.
 
 ---
 
