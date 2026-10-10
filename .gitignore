@@ -57,3 +57,11 @@ wilcom_medium_src/
 .vscode/
 .idea/
 .DS_Store
+
+# --- reference papers --------------------------------------------------------
+# The WILCOM paper was committed as a Git LFS pointer in the initial pipeline
+# commit, but it is a document to read, not an artifact the code consumes. It is
+# re-downloadable, so it is untracked here: keep it on disk, out of the repo.
+# Ignored by exact name so `2605.14747v1.pdf_by_PaddleOCR-VL-1.6.md`, which IS
+# tracked, still matches no rule.
+2605.14747v1.pdf
