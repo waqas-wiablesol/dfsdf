@@ -64,4 +64,4 @@ wilcom_medium_src/
 # re-downloadable, so it is untracked here: keep it on disk, out of the repo.
 # Ignored by exact name so `2605.14747v1.pdf_by_PaddleOCR-VL-1.6.md`, which IS
 # tracked, still matches no rule.
-2605.14747v1.pdf
+
